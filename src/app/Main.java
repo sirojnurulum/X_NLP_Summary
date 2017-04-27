@@ -22,10 +22,12 @@ import java.util.logging.Logger;
  */
 public class Main {
 
-    ArrayList<String> teks;
+    ArrayList<String> docs;
+    Control control;
 
     public Main() {
-        teks = new ArrayList<>();
+        docs = new ArrayList<>();
+        control = new Control();
     }
 
     public void mulai() {
@@ -33,12 +35,13 @@ public class Main {
 //        sentenceDetector();
 //        tokenisasi();
 //        postag();
-        stem();
+//        stem();
+        control.doStopWord(docs.get(0));
     }
 
     public void stem() {
         IndonesianStemmer is = new IndonesianStemmer();
-        ArrayList<String> tmp = new IndonesianSentenceTokenizer().tokenizeSentence(teks.get(0));
+        ArrayList<String> tmp = new IndonesianSentenceTokenizer().tokenizeSentence(docs.get(0));
         for (String string : tmp) {
             System.out.println("---------");
             System.out.println("kata : " + string);
@@ -54,7 +57,7 @@ public class Main {
     }
 
     public void postag() {
-        for (String[] string : IndonesianPOSTagger.doPOSTag(teks.get(0))) {
+        for (String[] string : IndonesianPOSTagger.doPOSTag(docs.get(0))) {
             System.out.println("====postag");
             for (String string1 : string) {
                 System.out.println(string1);
@@ -64,16 +67,16 @@ public class Main {
 
     public void tokenisasi() {
         IndonesianSentenceTokenizer ist = new IndonesianSentenceTokenizer();
-        System.out.println(teks.get(0));
+        System.out.println(docs.get(0));
         System.out.println("--------------------------------------------");
-        ist.tokenizeSentence(teks.get(0)).stream().map((tek) -> {
+        ist.tokenizeSentence(docs.get(0)).stream().map((tek) -> {
             System.out.println(tek);
             return tek;
         }).forEachOrdered((_item) -> {
             System.out.println("++");
         });
         System.out.println("=============================================");
-        ist.tokenizeSentenceWithCompositeWords(teks.get(0)).stream().map((object) -> {
+        ist.tokenizeSentenceWithCompositeWords(docs.get(0)).stream().map((object) -> {
             System.out.println(object);
             return object;
         }).forEachOrdered((_item) -> {
@@ -83,9 +86,9 @@ public class Main {
 
     public void sentenceDetector() {
         IndonesianSentenceDetector isd = new IndonesianSentenceDetector();
-        System.out.println(teks.get(0));
+        System.out.println(docs.get(0));
         System.out.println("---------------------------------------------");
-        isd.splitSentence(teks.get(0)).stream().map((String string) -> {
+        isd.splitSentence(docs.get(0)).stream().map((String string) -> {
             System.out.println(string);
             return string;
         }).forEachOrdered((_item) -> {
@@ -98,7 +101,7 @@ public class Main {
             BufferedReader bf = new BufferedReader(new FileReader("src/data/komputer"));
             Object[] o = bf.lines().toArray();
             for (Object object : o) {
-                teks.add(String.valueOf(object));
+                docs.add(String.valueOf(object));
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

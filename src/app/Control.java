@@ -5,6 +5,7 @@
  */
 package app;
 
+import IndonesianNLP.*;
 import java.util.ArrayList;
 
 /**
@@ -12,6 +13,25 @@ import java.util.ArrayList;
  * @author ABC
  */
 public class Control {
+
+    IndonesianNETagger inet;
+    IndonesianPOSTagger ipost;
+    IndonesianPhraseChunker ipc;
+    IndonesianReferenceResolution irr;
+    IndonesianSentenceDetector isd;
+    IndonesianSentenceFormalization isf;
+    IndonesianSentenceTokenizer ist;
+    IndonesianStemmer is;
+
+    public Control() {
+        this.inet = new IndonesianNETagger();
+        this.ipc = new IndonesianPhraseChunker();
+        this.irr = new IndonesianReferenceResolution();
+        this.isd = new IndonesianSentenceDetector();
+        this.isf = new IndonesianSentenceFormalization();
+        this.ist = new IndonesianSentenceTokenizer();
+        this.is = new IndonesianStemmer();
+    }
 
     public double calculateTf(ArrayList<String> doc, String x) {
         int hasil = 0;
@@ -30,6 +50,20 @@ public class Control {
     public double dalculateTfIdf(ArrayList<String> doc, ArrayList<ArrayList<String>> docs, String x) {
         return (calculateTf(doc, x) * calculateIdf(docs, x));
     }
-    
+
+    public String doStopWord(String kalimat) {
+        System.out.println("++");
+        System.out.println(kalimat);
+        System.out.println("++ formalized sentence");
+        kalimat = isf.formalizeSentence(kalimat);
+        System.out.println(kalimat);
+        System.out.println("++ formalized word");
+        System.out.println(isf.formalizeWord(kalimat));
+        System.out.println("++ stopword removed");
+        isf.initStopword();
+        kalimat = isf.deleteStopword(kalimat);
+        System.out.println(kalimat);
+        return kalimat;
+    }
     
 }
