@@ -26,7 +26,11 @@ public class Control {
     IndonesianSentenceTokenizer ist;
     IndonesianStemmer is;
 
+    /**
+     *
+     */
     public Control() {
+        //inisiasi kelas-kelas InaNLP
         this.inet = new IndonesianNETagger();
         this.ipc = new IndonesianPhraseChunker();
         this.irr = new IndonesianReferenceResolution();
@@ -36,6 +40,12 @@ public class Control {
         this.is = new IndonesianStemmer();
     }
 
+    /**
+     *
+     * @param docs
+     * @param tfidf
+     * @return
+     */
     public String createSummary(ArrayList<String> docs, HashMap<String, Double> tfidf) {
         String hasil = "";
         ArrayList<String> tmp = new ArrayList<>();
@@ -67,12 +77,19 @@ public class Control {
         for (int i = 0; i < newDocs.size(); i++) {
             if (newDocs.get(i).contains(tmp.get(0)) | newDocs.get(i).contains(tmp.get(1)) | newDocs.get(i).contains(tmp.get(2)) | newDocs.get(i).contains(tmp.get(3)) | newDocs.get(i).contains(tmp.get(4))) {
                 hasil = hasil + newDocs.get(i);
-                System.out.println(hasil);
+//                System.out.println(hasil);
             }
         }
         return hasil;
     }
 
+    /**
+     * calculate Term Frequency in a document.
+     *
+     * @param doc (list of words from a document)
+     * @param x (term to be searched)
+     * @return sum of term apear / total words in a document
+     */
     public double calculateTf(ArrayList<String> doc, String x) {
         float hasil = 0;
         for (int i = 0; i < doc.size(); i++) {
@@ -87,6 +104,13 @@ public class Control {
         return hasil / (float) doc.size();
     }
 
+    /**
+     * calculate IDF
+     *
+     * @param docs (list of document)
+     * @param x (term to be searched)
+     * @return Math.log(docs.size() / hasil)
+     */
     public double calculateIdf(ArrayList<ArrayList<String>> docs, String x) {
         float hasil = 0;
         for (int i = 0; i < docs.size(); i++) {
@@ -106,10 +130,24 @@ public class Control {
         return Math.log(docs.size() / hasil);
     }
 
+    /**
+     * calculate TF-ID F
+     *
+     * @param doc (list of words in a document) (one document)
+     * @param docs (list of documents)
+     * @param x (term to be searched)
+     * @return
+     */
     public double dalculateTfIdf(ArrayList<String> doc, ArrayList<ArrayList<String>> docs, String x) {
         return (calculateTf(doc, x) * calculateIdf(docs, x));
     }
 
+    /**
+     * do stop word elimination base on InaNLP
+     * 
+     * @param kalimat
+     * @return
+     */
     public String doStopWord(String kalimat) {
 //        System.out.println("++");
 //        System.out.println(kalimat);
@@ -125,6 +163,12 @@ public class Control {
         return kalimat;
     }
 
+    /**
+     * do stemming base on InaNLP
+     * 
+     * @param kalimat
+     * @return
+     */
     public String doStem(String kalimat) {
         ArrayList<String> tmp = ist.tokenizeSentence(kalimat);
         kalimat = "";
@@ -134,10 +178,21 @@ public class Control {
         return kalimat;
     }
 
+    /**
+     * separate sentence
+     * 
+     * @param kalimat
+     * @return
+     */
     public ArrayList<String> doTokenisasi(String kalimat) {
         return ist.tokenizeSentence(kalimat);
     }
 
+    /**
+     * do POS-Tag base on InaNLP
+     * 
+     * @param docs (list of document)
+     */
     public void postag(ArrayList<String> docs) {
         for (String[] string : IndonesianPOSTagger.doPOSTag(docs.get(0))) {
             System.out.println("====postag");
@@ -147,6 +202,10 @@ public class Control {
         }
     }
 
+    /**
+     *
+     * @param docs
+     */
     public void sentenceDetector(ArrayList<String> docs) {
         IndonesianSentenceDetector isd = new IndonesianSentenceDetector();
         System.out.println(docs.get(0));

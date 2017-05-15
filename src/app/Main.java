@@ -29,6 +29,9 @@ public class Main {
     String text;
     Control control;
 
+    /**
+     * constructor
+     */
     public Main() {
         docs = new ArrayList<>();
         docsStopWord = new ArrayList<>();
@@ -39,20 +42,30 @@ public class Main {
         control = new Control();
     }
 
+    /**
+     * start processing. this method will call another processing method
+     * 
+     * 
+     */
     public void mulai() {
         readDataFromFile();
         removeStopWordAndStem();
         getTf();
         getIdf();
-//        System.out.println(tfIdfData.size());
-//        System.out.println("####################################################");
-//        for (int i = 0; i < docs.size(); i++) {
-//            System.out.println(docs.get(i));
-//        }
-//        System.out.println("####################################################");
-//        System.out.println(control.createSummary(docs, tfIdfData));
+        System.out.println(tfIdfData.size());
+        System.out.println("####################################################");
+        for (int i = 0; i < docs.size(); i++) {
+            System.out.println(docs.get(i));
+        }
+        System.out.println("####################################################");
+        System.out.println(control.createSummary(docs, tfIdfData));
     }
 
+    /**
+     * get Term Frequency of the document.
+     * 
+     * result will be stored in tfData.
+     */
     public void getTf() {
         HashMap<String, Double> tfData;
         for (int i = 0; i < docsStopWord.size(); i++) {
@@ -72,13 +85,17 @@ public class Main {
         }
     }
 
+    /**
+     *get IDF of document. 
+     * 
+     * result will be stored in dfIdfData
+     */
     public void getIdf() {
         ArrayList<ArrayList<String>> tmp = new ArrayList<>();
         for (int i = 0; i < docs.size(); i++) {
             tmp.add(control.doTokenisasi(docs.get(i)));
         }
         for (Map.Entry<String, HashMap<String, Double>> entry : tfDatas.entrySet()) {
-            String key = entry.getKey();
             HashMap<String, Double> tfData = entry.getValue();
             for (Map.Entry<String, Double> entry1 : tfData.entrySet()) {
                 if (!idfData.containsKey(entry1.getKey())) {
@@ -92,6 +109,14 @@ public class Main {
         }
     }
 
+    /**
+     * do stopword and stemming
+     * 
+     * result will be stored in docsStopWord and docsStem
+     * 
+     * docsStopWord -> ArrayList<String>docsStopWord (list of stopped words)
+     * docsStem -> ArrayList<String>docsStem (list of origin words)
+     */
     public void removeStopWordAndStem() {
         for (int i = 0; i < docs.size(); i++) {
 //            System.out.println("-->>docs");
@@ -106,9 +131,14 @@ public class Main {
         }
     }
 
+    /**
+     * read document from external file and store it into docs
+     * 
+     * docs -> ArrayList<String>docs (list of document).
+     */
     public void readDataFromFile() {
         try {
-            BufferedReader bf = new BufferedReader(new FileReader("src/data/komputer"));
+            BufferedReader bf = new BufferedReader(new FileReader("src/data/paper"));
             Object[] o = bf.lines().toArray();
             for (Object object : o) {
                 docs.add(String.valueOf(object));
@@ -121,6 +151,10 @@ public class Main {
         }
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         new Main().mulai();
     }
